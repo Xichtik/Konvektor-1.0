@@ -45,12 +45,12 @@ dpi = 60 #Rozlišení grafů v DPI
 Nbarbs = 30   #Vykreslovat šipku větru pro každý Nbarbs-tý datový bod
 
 
-dt = 0.01   #Časový krok pro simulace
+dt = 0.001   #Časový krok pro simulace
 Simulated_seconds = 1200   #Simulovaná doba v sekundách
 v0 = 0   #Počáteční vertikální rychlost konvektivní částice
 virtv0 = 0   #Počáteční vertikální rychlost konvektivní částice při výpočtech s virtuální teplotou
 cycles = int(Simulated_seconds/dt)   #Počet iterací simulace
-speedInterval = 0.2   #Rychlostní krok, o který se zvyšuje počáteční vertikální rychlost konvektivní částice
+speedInterval = 0.05   #Rychlostní krok, o který se zvyšuje počáteční vertikální rychlost konvektivní částice
 itInt = 50000   #Interval, po kolika iteracích se printuje oznámení
 
 if input("Use default preferences? (Y/N): ") == 'N':
@@ -74,15 +74,6 @@ Tlist = list(data.Temperature) #Seznam teplot
 Hlist = list(data.Dew_point) #Seznam rosných bodů
 Dlist = list(data.Wind_direction) #Seznam směrů větru
 Slist = list(data.Wind_speed) #Seznam rychlostí větru
-
-"""
-Plist = [993.0,990.0,925.0,924.0,898.0,855.0,850.0,843.0,828.0,827.0,775.0,770.0,700.0,655.0,620.0,613.0,602.0,559.0,550.0,512.0,500.0,497.0,492.0,489.0,480.0,475.0,435.0,412.0,400.0,391.0,388.0,383.0,349.0,348.0,339.0,323.0,311.0,300.0,290.0,281.0,279.0,250.0,217.0,200.0,191.0,189.0,167.0,150.0,148.0,136.0,122.0,118.0,111.0,107.0,105.0,100.0,98.0,92.0,86.0,79.0,77.0,75.0,70.8,70.0,67.0,63.0,60.0,59.0,57.0,52.0,50.0,48.3,47.0,45.0,43.0,40.0,39.0,38.0,37.0,35.0,33.0,31.0,30.0,26.3,26.0,25.0,23.0,22.0,21.0,20.0,19.6,19.0,18.1,18.0,17.0,16.0,15.6,14.0,13.0,12.2,11.0,10.0,9.0,8.0,7.0,6.3,6.2] #Seznam tlaků
-Alist = [304,329,894,903,1138,1538,1586,1653,1799,1809,2338,2390,3160,3686,4121,4211,4352,4929,5053,5599,5780,5825,5901,5946,6084,6162,6808,7198,7410,7572,7626,7717,8367,8386,8565,8895,9149,9390,9615,9824,9871,10590,11493,12010,12304,12371,13158,13840,13924,14452,15131,15338,15718,15948,16065,16370,16495,16887,17305,17831,17990,18153,18510,18580,18852,19234,19537,19641,19856,20426,20670,20884,21052,21321,21603,22050,22207,22368,22532,22876,23240,23627,23830,24648,24720,24967,25491,25771,26063,26370,26498,26695,27003,27038,27404,27792,27954,28649,29125,29533,30203,30820,31518,32299,33195,33902,34010] #Seznam výšek
-Tlist = [14.0,13.7,7.2,7.0,5.6,3.6,3.4,3.2,4.2,4.2,5.2,4.9,0.2,-3.0,-5.6,-6.1,-6.7,-9.3,10.3,-15.0,-16.5,-16.9,-17.0,-17.1,-18.0,-18.5,-24.3,-27.5,-29.3,-30.9,-31.4,-32.2,-38.1,-38.5,-39.8,-42.3,-44.4,-46.3,-47.6,-48.8,-49.1,-52.1,56.9,55.1,-54.8,-54.7,-56.1,-57.3,-57.6,-59.5,-61.9,-60.9,-59.1,-59.5,-59.7,-60.3,-60.5,-60.9,-61.4,-62.1,-62.3,-62.5,-62.9,-62.7,-61.9,-60.9,-60.0,-59.7,-60.2,-61.5,-62.1,-62.9,-62.8,-62.7,-62.5,-62.3,-62.2,-62.1,-62.0,-61.8,-61.6,-61.4,-61.3,-61.5,-61.3,-60.6,-59.0,-58.2,-57.4,-56.5,-56.3,-56.6,-57.1,-56.9,-55.2,-53.3,-52.5,-53.6,-54.4,-55.1,-52.1,-49.3,-46.9,-44.3,-43.8,-43.4,-43.3] #Seznam teplot
-Hlist = list(data.Dew_point) #Seznam rosných bodů
-Dlist = list(data.Wind_direction) #Seznam směrů větru
-Slist = list(data.Wind_speed) #Seznam rychlostí větru
-"""
 
 print("Data imported.   Calculating.")
 
@@ -330,12 +321,20 @@ for i10 in range(len(Plist)):
 #Výpočet zrychlení (vztlaku působícího na částici)
 
 Blist = []
-for j7 in range(len(Tlist)):
-    if j7 <= CCLi:
-        b = g*( (konvTGDlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
-    else:
-        b = g*( (konvTGSlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
-    Blist.append(b)
+if Tkonv >= Tlist[0]:
+    for j7 in range(len(Tlist)):
+        if j7 <= CCLi:
+            b = g*( (konvTGDlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
+        else:
+            b = g*( (konvTGSlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
+        Blist.append(b)
+else:
+    for j7 in range(len(Tlist)):
+        if j7 <= CCLi:
+            b = g*( (TGDlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
+        else:
+            b = g*( (TGSlist[j7] - Tlist[j7]) /  virtTlistK[j7]  )
+        Blist.append(b)
 
 
 #Výpočet zrychlení (vztlaku působícího na částici) podle virtuální teploty
