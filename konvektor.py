@@ -62,7 +62,7 @@ if input("Use default preferences? (Y/N): ") == 'N':
     plotAmin = float(input("Minimum emagram altitude: (float)"))
     plotAmax = float(input("Maximum emagram altitude: (float)"))
     dpi = int(input("Resolution: (int)"))
-    dt = int(input("Simulation time step: (float)"))
+    dt = float(input("Simulation time step: (float)"))
     Simulated_seconds = int(input("Simulated time period: (int)"))
 
 data = pandas.read_csv(filename, header=0) #Přečtení datového souboru
@@ -161,9 +161,9 @@ for j in range(len(Tlist)):
     virtTlistK.append((Tlist[int(j)]+273.15)*(1+((Rv/Rd)-1)*s))
     VTdiff.append(virtTlistK[int(j)]-Tlist[int(j)]-273.15)
     if VTdiff[int(j)]<0: #Virtuální teplota nesmí být nižší než suchá teplota
-        print("Calculation ERROR: Virtual temperature less than dry bulb temperature!")
+        raise ValueError("Virtual temperature less than dry bulb temperature!")
     if Rlist[int(j)]>1:
-        print("Calculation ERROR: Relative humidity greater than 100%!")
+        raise ValueError("Relative humidity greater than 100%!")
 for j2 in range(len(virtTlistK)):
     virtTlistC.append(virtTlistK[j2] - 273.15)
 
@@ -443,7 +443,7 @@ for f1 in range(len(Tlist)):
     except:
         BruntVaisalaFreqlist.append(-1)
         BruntVaisalaFreqSqlist.append(0)
-        print("ERROR: Division by zero when calculating Brunt-Vaisala frequency.")
+        print("Division by zero when calculating Brunt-Vaisala frequency.")
 
 
 #Výpočet Bruntovy-Vaisalovy periody
@@ -492,7 +492,7 @@ for i1 in range(tropo1i, len(Tlist)):
     try:
         grad = (Tlist[i1]-Tlist[i1-1])/((Alist[i1]-Alist[i1-1])/1000)
     except:
-        print("ERROR: Division by zero when calculating second tropopause.")
+        raise ValueError("Division by zero when calculating second tropopause.")
     if grad > 3:
         for i2 in range(i1, len(Alist)):
             if (Alist[i2]-Alist[i1])>1000:
