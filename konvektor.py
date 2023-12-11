@@ -1261,6 +1261,40 @@ ax16.set_ylabel("Simulated parcel altitude AMSL [$m$]")
 print("Plots completed.")
 #Vykreslení celého grafu
 fig.tight_layout()
+
+f1 = plot.figure()
+plot.figure(f1)
+ax1 = plot.subplot(111) #Emagram
+ax1.axis([plotTmin, plotTmax, plotAmin, plotAmax])
+if cape > 0:
+    ax1.fill_betweenx(Alist[HVKi:HNVi], konvTGSlist[HVKi:HNVi], Tlist[HVKi:HNVi], facecolor = 'xkcd:creme' )
+ax1.plot(WTlist, Alist, color = 'xkcd:gold')
+ax1.plot(TGDlist, Alist, color = 'xkcd:orange')
+ax1.plot(x, s, color = 'xkcd:black')
+ax1.plot(konvTGDlist, Alist, color = 'xkcd:orange')
+ax1.plot(virtTlistC, Alist, 'xkcd:maroon', linestyle = 'dotted')
+ax1.plot(Hlist, Alist, color = 'b')
+ax1.plot(konvTGSlist, Alist, color = 'g')
+ax1.plot(TGSlist, Alist, color = 'g')
+ax1.plot(Tlist, Alist, color = 'r')
+ax1.plot(LCLtemp, LCLalt, color = 'k', marker = '_', markersize = 20)
+ax1.plot(CCLtemp, CCLalt, color = 'k', marker = '_', markersize = 20)
+ax1.text(LCLtemp, LCLalt, "     LCL     " + str(LCLalt) + 'm, ' + str(round(LCLtemp, 1)) + " °C", horizontalalignment='right')
+ax1.text(CCLtemp, CCLalt, "     CCL     " + str(CCLalt) + 'm, ' + str(round(CCLtemp, 1)) + " °C", horizontalalignment='right')
+ax1.grid()
+ax1.set_ylabel("Altitude AMSL [$m$]")
+ax1.set_xlabel("Temperature [$°C$]")
+if round(cape)>0:
+    ax1.plot(Tlist[HNVi], HNValt, color = 'k', marker = '_', markersize = 20)
+    ax1.text(Tlist[HNVi], HNValt, "EL     " + str(HNValt) + 'm    ', horizontalalignment='right')
+    ax1.plot(Tlist[HVKi], HVKalt, color = 'k', marker = '_', markersize = 20)
+    ax1.text(Tlist[HVKi], HVKalt, "     LFC     " + str(HVKalt) + 'm    ', horizontalalignment='left')
+    ax1.plot(Tlist[TOPi], TOPalt, color = 'k', marker = '_', markersize = 20)
+    ax1.text(Tlist[TOPi], TOPalt, "     TOP     " + str(TOPalt) + 'm', horizontalalignment='left')
+    if plotAmax>NELalt and showNEL is True:
+        ax1.plot(NELt, NELalt, color = 'k', marker = '_', markersize = 20)
+        ax1.text(NELt, NELalt, "     NEL     " + str(NELalt) + 'm', horizontalalignment='left')
+
 plot.show()
 
 print('\n' + "Script finished.")
